@@ -8,14 +8,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-/*
-TODO:
-A better way to connect to GRPC should be found.
-Unfortunately the defer function closes the connection to early and I don't want to clutter the main.go
-*/
 var rsConnection *grpc.ClientConn
+var rsClient jagw.RequestServiceClient
 
-func getJagwRequestClient() jagw.RequestServiceClient {
+func GetJagwRequestClient() {
 	config := configs.LoadConfig()
 	requestServiceEndpoint := jagw.JagwEndpoint{
 		EndpointAddress: config.JAGW.Server,
@@ -26,11 +22,9 @@ func getJagwRequestClient() jagw.RequestServiceClient {
 	if rsErr != nil {
 		log.Fatalf("Failed to setup request service connection: %s", rsErr)
 	}
-	// defer rsConnection.Close()
-
-	return jagw.NewRequestServiceClient(rsConnection)
+	rsClient = jagw.NewRequestServiceClient(rsConnection)
 }
 
-func closeJagwRequestClient() {
+func CloseJagwRequestClient() {
 	rsConnection.Close()
 }
