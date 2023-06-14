@@ -12,13 +12,10 @@ func GetAllNodes() *jagw.LsNodeResponse {
 	var response *jagw.LsNodeResponse
 	var err error
 
-	client := getJagwRequestClient()
-	defer closeJagwRequestClient()
-
 	request := &jagw.TopologyRequest{}
 
 	for i := 0; i < 3; i++ {
-		response, err = client.GetLsNodes(context.Background(), request)
+		response, err = rsClient.GetLsNodes(context.Background(), request)
 		if err == nil {
 			break
 		}
